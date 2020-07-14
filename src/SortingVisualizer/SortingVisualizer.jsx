@@ -1,12 +1,12 @@
 import React from 'react';
-import {getMergeSortAnimations} from '../sortingAlgorithms/sortingAlgorithms.js';
+import {getMergeSortAnimations, getSelectionSortAnimations} from '../sortingAlgorithms/sortingAlgorithms.js';
 import './SortingVisualizer.css';
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 1;
+const ANIMATION_SPEED_MS = 100;
 
 // Change this value for the number of bars (value) in the array.
-const NUMBER_OF_ARRAY_BARS = 310;
+const NUMBER_OF_ARRAY_BARS = 25;
 
 // This is the main color of the array bars.
 const PRIMARY_COLOR = 'turquoise';
@@ -33,6 +33,10 @@ export default class SortingVisualizer extends React.Component {
       array.push(randomIntFromInterval(5, 730));
     }
     this.setState({array});
+    const arrayBars = document.getElementsByClassName('array-bar');
+    for (let i = 0; i < arrayBars.length; i++) {
+      arrayBars[i].style.backgroundColor = PRIMARY_COLOR;
+    }
   }
 
   mergeSort() {
@@ -59,6 +63,54 @@ export default class SortingVisualizer extends React.Component {
     }
   }
 
+  selectionSort() {
+    const animations = getSelectionSortAnimations(this.state.array);       
+      const arrayBars = document.getElementsByClassName('array-bar');
+      console.log(arrayBars)
+      for (let i = 0; i < arrayBars.length - 1; i++) {
+        let min = i;
+        
+        setTimeout(() => { 
+          arrayBars[i].style.backgroundColor = SECONDARY_COLOR;
+          for (let j = i + 1; j < arrayBars.length; j++) {
+            if (arrayBars[j].clientHeight < arrayBars[min].clientHeight) {
+               min = j
+            }
+          }
+          let tmp = arrayBars[i].clientHeight;
+          arrayBars[i].style.height = `${arrayBars[min].clientHeight}px`;
+          arrayBars[min].style.height = `${tmp}px`;
+
+        }, i * 500);
+
+        // animations.push([i, min]);
+        arrayBars[i].style.backgroundColor = PRIMARY_COLOR;
+      }
+      }
+   
+bubbleSort() {
+  // We leave it as an exercise to the viewer of this code to implement this method.
+  const arrayBars = document.getElementsByClassName('array-bar');
+  for (let i = 0; i < arrayBars.length-1; i++) {
+    let j
+    setTimeout(() => { 
+      for (j = 0; j < arrayBars.length-1-i; j++) {
+        if (arrayBars[j+1].clientHeight < arrayBars[j].clientHeight) {
+          let tmp = arrayBars[j+1].clientHeight;
+          arrayBars[j+1].style.height = `${arrayBars[j].clientHeight}px`;
+          arrayBars[j].style.height = `${tmp}px`;
+
+  
+        }
+      }
+      arrayBars[j].style.backgroundColor = SECONDARY_COLOR;
+      
+
+    }, i * 500);
+
+
+  }
+}
   quickSort() {
     // We leave it as an exercise to the viewer of this code to implement this method.
   }
@@ -67,9 +119,7 @@ export default class SortingVisualizer extends React.Component {
     // We leave it as an exercise to the viewer of this code to implement this method.
   }
 
-  bubbleSort() {
-    // We leave it as an exercise to the viewer of this code to implement this method.
-  }
+
 
   // NOTE: This method will only work if your sorting algorithms actually return
   // the sorted arrays; if they return the animations (as they currently do), then
@@ -103,12 +153,10 @@ export default class SortingVisualizer extends React.Component {
         ))}
         <button onClick={() => this.resetArray()}>Generate New Array</button>
         <button onClick={() => this.mergeSort()}>Merge Sort</button>
-        <button onClick={() => this.quickSort()}>Quick Sort</button>
-        <button onClick={() => this.heapSort()}>Heap Sort</button>
+        {/* <button onClick={() => this.quickSort()}>Quick Sort</button>
+        <button onClick={() => this.heapSort()}>Heap Sort</button> */}
         <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
-        <button onClick={() => this.testSortingAlgorithms()}>
-          Test Sorting Algorithms (BROKEN)
-        </button>
+        <button onClick={() => this.selectionSort()}>Selection Sort</button>
       </div>
     );
   }
