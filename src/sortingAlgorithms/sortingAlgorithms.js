@@ -3,6 +3,28 @@ export function getMergeSortAnimations(array) {
   if (array.length <= 1) return array;
   const auxiliaryArray = array.slice();
   mergeSortHelper(array, 0, array.length - 1, auxiliaryArray, animations);
+  console.log(array)
+  return animations;
+}
+
+export function getSelectionSortAnimations(array) {
+  const animations = [];
+  if (array.length <= 1) return array;
+  console.log(array)
+  // animations = selectionSort(array, animations);
+  for(let i = 0; i < array.length - 1; i++) {
+    let min = i;
+    for (let j = i + 1; j < array.length; j++) {
+      if (array[j] < array[min]) {
+         min = j
+      }
+    }
+    let tmp = array[i];
+    array[i] = array[min];
+    array[min] = tmp
+    // animations.push([i, min]);
+  }
+  console.log(array);
   return animations;
 }
 
