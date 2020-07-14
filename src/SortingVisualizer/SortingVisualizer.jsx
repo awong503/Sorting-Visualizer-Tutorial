@@ -3,10 +3,10 @@ import {getMergeSortAnimations, getSelectionSortAnimations} from '../sortingAlgo
 import './SortingVisualizer.css';
 
 // Change this value for the speed of the animations.
-const ANIMATION_SPEED_MS = 100;
+const ANIMATION_SPEED_MS = 200;
 
 // Change this value for the number of bars (value) in the array.
-const NUMBER_OF_ARRAY_BARS = 25;
+const NUMBER_OF_ARRAY_BARS = 50;
 
 // This is the main color of the array bars.
 const PRIMARY_COLOR = 'turquoise';
@@ -52,13 +52,13 @@ export default class SortingVisualizer extends React.Component {
         setTimeout(() => {
           barOneStyle.backgroundColor = color;
           barTwoStyle.backgroundColor = color;
-        }, i * ANIMATION_SPEED_MS);
+        }, i * 30);
       } else {
         setTimeout(() => {
           const [barOneIdx, newHeight] = animations[i];
           const barOneStyle = arrayBars[barOneIdx].style;
           barOneStyle.height = `${newHeight}px`;
-        }, i * ANIMATION_SPEED_MS);
+        }, i * 30);
       }
     }
   }
@@ -67,7 +67,7 @@ export default class SortingVisualizer extends React.Component {
     const animations = getSelectionSortAnimations(this.state.array);       
       const arrayBars = document.getElementsByClassName('array-bar');
       console.log(arrayBars)
-      for (let i = 0; i < arrayBars.length - 1; i++) {
+      for (let i = 0; i < arrayBars.length; i++) {
         let min = i;
         
         setTimeout(() => { 
@@ -81,7 +81,7 @@ export default class SortingVisualizer extends React.Component {
           arrayBars[i].style.height = `${arrayBars[min].clientHeight}px`;
           arrayBars[min].style.height = `${tmp}px`;
 
-        }, i * 500);
+        }, i * ANIMATION_SPEED_MS);
 
         // animations.push([i, min]);
         arrayBars[i].style.backgroundColor = PRIMARY_COLOR;
@@ -89,9 +89,8 @@ export default class SortingVisualizer extends React.Component {
       }
    
 bubbleSort() {
-  // We leave it as an exercise to the viewer of this code to implement this method.
   const arrayBars = document.getElementsByClassName('array-bar');
-  for (let i = 0; i < arrayBars.length-1; i++) {
+  for (let i = 0; i < arrayBars.length; i++) {
     let j
     setTimeout(() => { 
       for (j = 0; j < arrayBars.length-1-i; j++) {
@@ -106,17 +105,34 @@ bubbleSort() {
       arrayBars[j].style.backgroundColor = SECONDARY_COLOR;
       
 
-    }, i * 500);
+    }, i * ANIMATION_SPEED_MS);
 
 
   }
 }
+
+  insertionSort() {
+    const arrayBars = document.getElementsByClassName('array-bar');
+    for(let i = 1; i < arrayBars.length; i++) {
+      let v = arrayBars[i].clientHeight;
+      let j = i - 1;
+      setTimeout(() => {
+        while (j>=0 && arrayBars[j].clientHeight > v) {
+          arrayBars[j+1].style.height = `${arrayBars[j].clientHeight}px`;
+          arrayBars[j+1].style.backgroundColor = SECONDARY_COLOR;
+          j = j-1;
+  
+        }
+      arrayBars[j+1].style.height = `${v}px`
+      // arrayBars[j+1].style.backgroundColor = SECONDARY_COLOR;
+      }, i * ANIMATION_SPEED_MS);
+
+    }
+  }
   quickSort() {
-    // We leave it as an exercise to the viewer of this code to implement this method.
   }
 
   heapSort() {
-    // We leave it as an exercise to the viewer of this code to implement this method.
   }
 
 
@@ -157,6 +173,7 @@ bubbleSort() {
         <button onClick={() => this.heapSort()}>Heap Sort</button> */}
         <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
         <button onClick={() => this.selectionSort()}>Selection Sort</button>
+        <button onClick={() => this.insertionSort()}>Insertion Sort</button>
       </div>
     );
   }
